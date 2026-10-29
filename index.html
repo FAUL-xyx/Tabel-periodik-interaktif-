@@ -63,7 +63,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:
 <div id="bar"></div>
 <div id="stage"><div id="scene"></div></div>
 <div id="info"></div>
-<div id="hint">seret = putar · scroll / cubit = zoom · klik kotak = detail + model atom</div>
+<div id="hint">seret = putar · 2 jari / klik kanan / Shift+seret / tombol geser = geser kamera · scroll / cubit = zoom · klik kotak = detail + model atom</div>
 <script>
 const D="H,Hidrogen,1.008|He,Helium,4.0026|Li,Litium,6.94|Be,Berilium,9.0122|B,Boron,10.81|C,Karbon,12.011|N,Nitrogen,14.007|O,Oksigen,15.999|F,Fluorin,18.998|Ne,Neon,20.180|Na,Natrium,22.990|Mg,Magnesium,24.305|Al,Aluminium,26.982|Si,Silikon,28.085|P,Fosfor,30.974|S,Belerang,32.06|Cl,Klorin,35.45|Ar,Argon,39.948|K,Kalium,39.098|Ca,Kalsium,40.078|Sc,Skandium,44.956|Ti,Titanium,47.867|V,Vanadium,50.942|Cr,Kromium,51.996|Mn,Mangan,54.938|Fe,Besi,55.845|Co,Kobalt,58.933|Ni,Nikel,58.693|Cu,Tembaga,63.546|Zn,Seng,65.38|Ga,Galium,69.723|Ge,Germanium,72.630|As,Arsen,74.922|Se,Selenium,78.971|Br,Bromin,79.904|Kr,Kripton,83.798|Rb,Rubidium,85.468|Sr,Stronsium,87.62|Y,Itrium,88.906|Zr,Zirkonium,91.224|Nb,Niobium,92.906|Mo,Molibdenum,95.95|Tc,Teknesium,98|Ru,Rutenium,101.07|Rh,Rodium,102.91|Pd,Paladium,106.42|Ag,Perak,107.87|Cd,Kadmium,112.41|In,Indium,114.82|Sn,Timah,118.71|Sb,Antimon,121.76|Te,Telurium,127.60|I,Iodin,126.90|Xe,Xenon,131.29|Cs,Sesium,132.91|Ba,Barium,137.33|La,Lantanum,138.91|Ce,Serium,140.12|Pr,Praseodimium,140.91|Nd,Neodimium,144.24|Pm,Prometium,145|Sm,Samarium,150.36|Eu,Europium,151.96|Gd,Gadolinium,157.25|Tb,Terbium,158.93|Dy,Disprosium,162.50|Ho,Holmium,164.93|Er,Erbium,167.26|Tm,Tulium,168.93|Yb,Iterbium,173.05|Lu,Lutesium,174.97|Hf,Hafnium,178.49|Ta,Tantalum,180.95|W,Tungsten,183.84|Re,Renium,186.21|Os,Osmium,190.23|Ir,Iridium,192.22|Pt,Platina,195.08|Au,Emas,196.97|Hg,Raksa,200.59|Tl,Talium,204.38|Pb,Timbal,207.2|Bi,Bismut,208.98|Po,Polonium,209|At,Astatin,210|Rn,Radon,222|Fr,Fransium,223|Ra,Radium,226|Ac,Aktinium,227|Th,Torium,232.04|Pa,Protaktinium,231.04|U,Uranium,238.03|Np,Neptunium,237|Pu,Plutonium,244|Am,Amerisium,243|Cm,Kurium,247|Bk,Berkelium,247|Cf,Kalifornium,251|Es,Einsteinium,252|Fm,Fermium,257|Md,Mendelevium,258|No,Nobelium,259|Lr,Lawrensium,266|Rf,Rutherfordium,267|Db,Dubnium,268|Sg,Seaborgium,269|Bh,Bohrium,270|Hs,Hasium,277|Mt,Meitnerium,278|Ds,Darmstadtium,281|Rg,Roentgenium,282|Cn,Kopernisium,285|Nh,Nihonium,286|Fl,Flerovium,289|Mc,Moskovium,290|Lv,Livermorium,293|Ts,Tenesin,294|Og,Oganeson,294";
 const INFO=[];
@@ -149,32 +149,34 @@ const L={
   grid:(o,i)=>`translate3d(${(i%5)*190-380}px,${-(Math.floor(i/5)%4)*190+285}px,${Math.floor(i/20)*350-875}px)`
 };
 // kamera: nilai saat ini (rx,ry,k) mengejar nilai target (trx,try_,tk)
-let rx=0,ry=0,k=.4,trx=0,try_=0,tk=.4,mode="table",drag=false;
+let rx=0,ry=0,k=.4,trx=0,try_=0,tk=.4,px=0,py=0,tpx=0,tpy=0,mode="table",drag=false;
 function fit(m){const w=innerWidth,h=innerHeight;return m=="table"?Math.min(1.2,w/1800):Math.min(1.1,Math.min(w,h)/1100)}
 function setMode(m){
   mode=m;
   els.forEach((o,i)=>{o.e.style.transitionDelay=(i*6)+"ms,0ms,0ms,0ms,0ms,0ms";o.e.style.transform=L[m](o,i)});
-  trx=0;try_=Math.round(ry/360)*360;tk=fit(m);
-  document.querySelectorAll("#bar button").forEach(b=>b.classList.toggle("on",b.dataset.m==m));
+  trx=0;try_=Math.round(ry/360)*360;tk=fit(m);tpx=0;tpy=0;
+  document.querySelectorAll("#bar button[data-m]").forEach(b=>b.classList.toggle("on",b.dataset.m==m));
 }
 const bar=document.getElementById("bar");
 ["table","sphere","helix","grid"].forEach(m=>{const b=document.createElement("button");b.textContent=m;b.dataset.m=m;b.onclick=()=>setMode(m);bar.appendChild(b)});
 function frame(){
   if(!drag&&(mode=="sphere"||mode=="helix")&&!scene.querySelector(".x"))try_+=.15;
   rx+=(trx-rx)*.1;ry+=(try_-ry)*.1;k+=(tk-k)*.1;
-  scene.style.transform=`scale(${k}) rotateX(${rx}deg) rotateY(${ry}deg)`;if(sel)placeInfo();
+  const L=1100*tk+innerWidth*.3;tpx=Math.max(-L,Math.min(L,tpx));tpy=Math.max(-L,Math.min(L,tpy));
+  px+=(tpx-px)*.15;py+=(tpy-py)*.15;
+  scene.style.transform=`translate(${px.toFixed(2)}px,${py.toFixed(2)}px) scale(${k}) rotateX(${rx}deg) rotateY(${ry}deg)`;if(sel)placeInfo();
   requestAnimationFrame(frame);
 }
 // interaksi: seret putar, scroll/cubit zoom, klik = detail
-const ptr=new Map();let moved=0,pd=0,startT=null;
-stage.addEventListener("pointerdown",e=>{ptr.set(e.pointerId,[e.clientX,e.clientY]);drag=true;if(ptr.size==1){moved=0;startT=e.target.closest(".el")}
-  if(ptr.size==2){const[a,b]=[...ptr.values()];pd=Math.hypot(a[0]-b[0],a[1]-b[1])}});
+const ptr=new Map();let moved=0,pd=0,startT=null,panMode=false,panBtn=false,pm=null;
+stage.addEventListener("pointerdown",e=>{ptr.set(e.pointerId,[e.clientX,e.clientY]);drag=true;if(ptr.size==1){moved=0;startT=e.target.closest(".el");panBtn=e.button==1||e.button==2||e.shiftKey}
+  if(ptr.size==2){const[a,b]=[...ptr.values()];pd=Math.hypot(a[0]-b[0],a[1]-b[1]);pm=null}});
 addEventListener("pointermove",e=>{
   if(!ptr.has(e.pointerId))return;const p=ptr.get(e.pointerId);
   if(ptr.size==1){const dx=e.clientX-p[0],dy=e.clientY-p[1];moved+=Math.abs(dx)+Math.abs(dy);
-    try_+=dx*.4;trx=Math.max(-80,Math.min(80,trx-dy*.4));ry=try_;rx=trx}
+    if(panMode||panBtn){tpx+=dx;tpy+=dy}else{try_+=dx*.4;trx=Math.max(-80,Math.min(80,trx-dy*.4));ry=try_;rx=trx}}
   ptr.set(e.pointerId,[e.clientX,e.clientY]);
-  if(ptr.size==2){const[a,b]=[...ptr.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]);tk=Math.max(.1,Math.min(3,tk*d/pd));pd=d;moved=99}
+  if(ptr.size==2){const[a,b]=[...ptr.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]),mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2;zoomAt(mx,my,d/pd);if(pm){tpx+=mx-pm[0];tpy+=my-pm[1]}pm=[mx,my];pd=d;moved=99}
 });
 function up(e){
   if(ptr.size==1&&moved<6&&startT){const was=startT.classList.contains("x");
@@ -182,7 +184,7 @@ function up(e){
   ptr.delete(e.pointerId);if(!ptr.size)drag=false;
 }
 addEventListener("pointerup",up);addEventListener("pointercancel",up);
-stage.addEventListener("wheel",e=>{e.preventDefault();tk=Math.max(.1,Math.min(3,tk*Math.exp(-e.deltaY*.001)))},{passive:false});
+stage.addEventListener("wheel",e=>{e.preventDefault();zoomAt(e.clientX,e.clientY,Math.exp(-e.deltaY*.001))},{passive:false});
 addEventListener("resize",()=>{tk=fit(mode)});
 // legenda kategori (klik = sorot) + pencarian
 let fCat=null,q="";
@@ -201,6 +203,12 @@ Object.values(CAT).forEach(([lb,h])=>{const b=document.createElement("button"),c
 const inp=document.createElement("input");inp.type="search";inp.placeholder="Cari nama / simbol / nomor";inp.autocomplete="off";bar.appendChild(inp);
 inp.oninput=()=>{q=inp.value.trim();const m=applyFilter();if(q&&m.length==1)show(m[0])};
 inp.onkeydown=e=>{if(e.key=="Enter"){const m=applyFilter();if(m.length)show(m[0]);inp.blur()}else if(e.key=="Escape"){inp.value="";q="";applyFilter();closeEl()}};
+// zoom ke arah titik kursor / jari, supaya bagian yang dilihat tidak lari
+function zoomAt(cx,cy,f){const k2=Math.max(.1,Math.min(4,tk*f)),r=k2/tk,ox=cx-innerWidth/2,oy=cy-innerHeight/2;tpx=ox-(ox-tpx)*r;tpy=oy-(oy-tpy)*r;tk=k2}
+stage.addEventListener("contextmenu",e=>e.preventDefault());
+const pb=document.createElement("button");pb.textContent="geser";pb.title="Seret = geser kamera";pb.onclick=()=>{panMode=!panMode;pb.classList.toggle("on",panMode)};bar.insertBefore(pb,bar.children[4]);
+addEventListener("keydown",e=>{if(e.target.tagName=="INPUT")return;const s=70,m={ArrowLeft:[s,0],ArrowRight:[-s,0],ArrowUp:[0,s],ArrowDown:[0,-s],a:[s,0],d:[-s,0],w:[0,s],s:[0,-s]}[e.key];
+  if(m){tpx+=m[0];tpy+=m[1];e.preventDefault()}else if(e.key=="+"||e.key=="=")zoomAt(innerWidth/2,innerHeight/2,1.15);else if(e.key=="-")zoomAt(innerWidth/2,innerHeight/2,1/1.15)});
 setMode("table");k=tk;requestAnimationFrame(frame);
 </script>
 </body>
