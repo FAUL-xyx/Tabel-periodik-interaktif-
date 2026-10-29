@@ -3,66 +3,168 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="author" content="Shifaul K.S">
 <title>Tabel Periodik 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{box-sizing:border-box;--bg:#12130f;--fg:#e8eadf;--mut:#8b8f7e;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+:root{box-sizing:border-box;--c1:#F7CBCA;--c2:#DDD3D3;--c3:#F1F7F7;--c4:#D5E5E5;--c5:#B0D7D8;--c6:#5D6B6B;--ink:#2e3939;--mut:#5D6B6B;
+  --glass:rgba(241,247,247,.62);--edge:rgba(255,255,255,.78);--shadow:0 8px 24px rgba(93,107,107,.18);
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light;
+  font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:"Roboto Mono",ui-monospace,Menlo,Consolas,monospace;overflow:hidden}
-#bar{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:5;display:flex;justify-content:center;gap:6px;padding:12px}
-#bar button{font:inherit;font-size:12px;padding:6px 12px;border:0;border-radius:3px;background:#2a2c24;color:var(--fg);cursor:pointer}
-#bar button.on{background:#e8eadf;color:#12130f}
-#bar{pointer-events:none;flex-wrap:wrap;align-items:center}
+html,body{height:100%;margin:0;overflow:hidden;color:var(--ink);
+  background:linear-gradient(180deg,var(--c5) 0%,var(--c4) 22%,var(--c3) 48%,#f6dedd 78%,var(--c1) 100%) fixed}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(60% 40% at 15% 8%,rgba(255,255,255,.6),transparent 70%),radial-gradient(55% 38% at 92% 96%,rgba(247,203,202,.75),transparent 70%)}
+#bar{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:5;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;padding:10px 12px;pointer-events:none}
 #bar>*{pointer-events:auto}
-#bar input{font:inherit;font-size:12px;width:190px;max-width:100%;box-sizing:border-box;padding:6px 10px;border:0;border-radius:3px;background:#2a2c24;color:var(--fg);outline:none}
-#bar input:focus{box-shadow:0 0 0 1px var(--mut)}
-@media(max-width:560px){#bar input{font-size:16px}}
-.el.dim{opacity:.1;pointer-events:none}
-#legend{position:fixed;z-index:5;left:0;right:0;bottom:calc(30px + env(safe-area-inset-bottom,0px));display:flex;flex-wrap:wrap;justify-content:center;gap:4px 6px;padding:0 8px;pointer-events:none}
-#legend button{pointer-events:auto;font:inherit;font-size:10px;display:flex;align-items:center;gap:5px;padding:4px 9px;border:1px solid transparent;border-radius:12px;background:#2a2c24;color:var(--fg);cursor:pointer}
-#legend button.on{border-color:var(--fg);background:#3a3d32}
-#legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+#brand{width:100%;text-align:center;pointer-events:none!important;margin-bottom:2px}
+#brand h1{margin:0;font-family:"Fraunces",Georgia,serif;font-style:italic;font-weight:500;font-size:28px;line-height:1.1;color:var(--ink)}
+#brand p{margin:2px 0 0;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--mut)}
+.seg{display:flex;padding:4px;border-radius:999px;background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--edge);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.85)}
+.seg button,#bar .tog{font:inherit;font-size:12px;font-weight:500;letter-spacing:.02em;padding:7px 15px;border:0;border-radius:999px;background:transparent;color:var(--mut);
+  cursor:pointer;transition:background .25s,color .25s,box-shadow .25s,transform .15s}
+.seg button:hover,#bar .tog:hover{color:var(--ink);background:rgba(255,255,255,.55)}
+.seg button:active,#bar .tog:active{transform:scale(.96)}
+.seg button.on,#bar .tog.on{background:linear-gradient(150deg,#7a8c8c,var(--c6));color:var(--c3);box-shadow:0 5px 14px rgba(93,107,107,.38),inset 0 1px 0 rgba(255,255,255,.25)}
+#bar .tog{display:flex;align-items:center;gap:6px;background:var(--glass);border:1px solid var(--edge);box-shadow:var(--shadow);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+#bar input{font:inherit;font-size:12px;width:190px;max-width:100%;box-sizing:border-box;padding:9px 14px 9px 34px;border:1px solid var(--edge);border-radius:999px;
+  background:var(--glass) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235D6B6B' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") no-repeat 12px center/14px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--ink);outline:none;box-shadow:var(--shadow);transition:box-shadow .25s,width .3s}
+#bar input::placeholder{color:#7f8f8f}
+#bar input:focus{width:230px;box-shadow:0 0 0 2px var(--c5),var(--shadow)}
+@media(max-width:560px){#bar input{font-size:16px}#brand h1{font-size:23px}}
 #stage{position:absolute;inset:0;perspective:2000px;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
 #stage:active{cursor:grabbing}
 #scene{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d}
-.el{position:absolute;left:50%;top:50%;width:84px;height:104px;translate:-50% -50%;box-sizing:border-box;padding:6px;
+.el{position:absolute;left:50%;top:50%;width:84px;height:104px;translate:-50% -50%;box-sizing:border-box;padding:7px 8px;
   display:flex;flex-direction:column;align-items:center;justify-content:space-between;overflow:hidden;cursor:pointer;
-  background:hsla(var(--h),60%,38%,.28);border:1px solid hsla(var(--h),70%,60%,.65);border-radius:4px;
-  box-shadow:0 0 12px hsla(var(--h),80%,55%,.35);color:hsl(var(--h),85%,78%);
+  background:linear-gradient(155deg,hsla(var(--h),70%,97%,.96),hsla(var(--h),55%,85%,.9));border:1px solid rgba(255,255,255,.9);border-radius:10px;
+  box-shadow:0 8px 18px rgba(93,107,107,.22),inset 0 1px 0 #fff,inset 0 -10px 18px hsla(var(--h),50%,70%,.25);color:hsl(var(--h),32%,24%);
   transition:transform 1.3s cubic-bezier(.2,.8,.2,1),width .3s,height .3s,translate .3s,background .3s,opacity .3s}
-.el:hover{background:hsla(var(--h),65%,45%,.5)}
-.el i{align-self:flex-end;font-style:normal;font-size:11px;opacity:.8}
-.el b{font-size:30px;font-weight:500}
-.el u{text-decoration:none;font-size:10px;color:var(--fg);opacity:.8;white-space:nowrap}
-
-.el.x{translate:-50% -50% 40px;z-index:1;background:hsla(var(--h),65%,45%,.6);box-shadow:0 0 22px hsla(var(--h),90%,60%,.9);border-color:hsl(var(--h),90%,70%)}
-#info{position:fixed;z-index:6;width:300px;max-width:calc(100vw - 16px);box-sizing:border-box;padding:14px;border-radius:8px;background:hsla(var(--h),40%,12%,.95);border:1px solid hsla(var(--h),70%,60%,.6);box-shadow:0 8px 30px rgba(0,0,0,.5);font-size:12px;line-height:1.5;display:none;overflow:auto;max-height:calc(100vh - 80px);touch-action:pan-y}
-#info.on{display:block}
-#info h2{margin:0;font-size:22px;font-weight:500;color:hsl(var(--h),85%,78%)}
-#info h2 span{font-size:12px;font-weight:400;color:var(--mut);margin-left:8px}
-#info h3{margin:12px 0 4px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:400}
+.el:hover{background:linear-gradient(155deg,#fff,hsla(var(--h),65%,82%,.96))}
+.el i{align-self:flex-end;font-style:normal;font-size:10px;font-weight:600;color:var(--mut)}
+.el b{font-family:"Fraunces",Georgia,serif;font-size:30px;font-weight:600;line-height:1}
+.el u{text-decoration:none;font-size:9.5px;font-weight:500;color:var(--mut);white-space:nowrap}
+.el.x{translate:-50% -50% 40px;z-index:1;background:linear-gradient(155deg,#fff,hsla(var(--h),70%,78%,1));
+  box-shadow:0 0 0 2px var(--c6),0 16px 34px rgba(93,107,107,.45),inset 0 1px 0 #fff}
+.el.dim{opacity:.16;pointer-events:none}
+#info{position:fixed;z-index:6;width:300px;max-width:calc(100vw - 16px);box-sizing:border-box;padding:16px;border-radius:20px;
+  background:rgba(241,247,247,.82);backdrop-filter:blur(22px) saturate(1.2);-webkit-backdrop-filter:blur(22px) saturate(1.2);
+  border:1px solid var(--edge);box-shadow:0 18px 50px rgba(93,107,107,.32),inset 0 1px 0 #fff;color:var(--ink);
+  font-size:12px;line-height:1.55;display:none;overflow:auto;max-height:calc(100vh - 120px);touch-action:pan-y}
+#info.on{display:block;animation:rise .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+#info h2{margin:0;font-family:"Fraunces",Georgia,serif;font-size:30px;font-weight:600;line-height:1.15;color:hsl(var(--h),32%,26%)}
+#info h2 span{font-family:"Inter",system-ui,sans-serif;font-size:12px;font-weight:500;color:var(--mut);margin-left:8px}
+#info h3{margin:14px 0 6px;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);font-weight:600}
 #info p{margin:0}
-#info button{position:absolute;top:8px;right:8px;width:26px;height:26px;border:0;border-radius:4px;background:#2a2c24;color:var(--fg);font:inherit;cursor:pointer}
-#info .atom{width:170px;height:170px;margin:0 auto}
+#info b{font-weight:600}
+#info button{position:absolute;top:12px;right:12px;width:28px;height:28px;border:1px solid var(--edge);border-radius:50%;background:rgba(255,255,255,.7);
+  color:var(--mut);font:inherit;cursor:pointer;box-shadow:0 2px 8px rgba(93,107,107,.2);transition:background .2s,color .2s}
+#info button:hover{background:var(--c6);color:var(--c3)}
+#info .atom{width:170px;height:170px;margin:0 auto;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.95),hsla(var(--h),50%,85%,.4) 70%,transparent 72%)}
 #info .mol svg{width:100%;height:110px;display:block}
 #info .note{color:var(--mut);font-size:11px;margin-top:8px}
-.bond{stroke:var(--fg);stroke-width:2;stroke-linecap:round}
-.bond.d{stroke-dasharray:3 3;opacity:.7}
-.al{font-size:11px;font-weight:700;text-anchor:middle;dominant-baseline:central;fill:#12130f}
-
-
 .atom svg{width:100%;height:100%;display:block}
-.orb{fill:none;stroke:hsla(var(--h),60%,60%,.45);stroke-width:.8}
-.elc{fill:hsl(var(--h),90%,72%)}
-.nuc{fill:hsl(var(--h),85%,62%)}
+.orb{fill:none;stroke:hsla(var(--h),30%,45%,.42);stroke-width:.8}
+.elc{fill:hsl(var(--h),55%,52%);stroke:#fff;stroke-width:.7}
+.nuc{fill:hsl(var(--h),58%,52%)}
 .o{transform-origin:100px 100px;animation:spin linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-#hint{position:fixed;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom,0px));text-align:center;font-size:11px;color:var(--mut);pointer-events:none}
+.bond{stroke:var(--c6);stroke-width:2;stroke-linecap:round}
+.bond.d{stroke-dasharray:3 3;opacity:.7}
+.al{font-size:11px;font-weight:700;text-anchor:middle;dominant-baseline:central;fill:var(--ink)}
+#legend{position:fixed;z-index:5;left:0;right:0;bottom:calc(30px + env(safe-area-inset-bottom,0px));display:flex;flex-wrap:wrap;justify-content:center;gap:5px 6px;padding:0 8px;pointer-events:none}
+#legend button{pointer-events:auto;font:inherit;font-size:10.5px;font-weight:500;display:flex;align-items:center;gap:6px;padding:6px 11px;border:1px solid var(--edge);border-radius:999px;
+  background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:var(--ink);cursor:pointer;box-shadow:0 4px 12px rgba(93,107,107,.14);transition:background .25s,color .25s,transform .15s}
+#legend button:hover{background:rgba(255,255,255,.85)}
+#legend button:active{transform:scale(.96)}
+#legend button.on{background:linear-gradient(150deg,#7a8c8c,var(--c6));color:var(--c3);border-color:transparent}
+#legend i{width:10px;height:10px;border-radius:50%;display:inline-block;box-shadow:0 0 0 2px rgba(255,255,255,.75)}
+#hint{position:fixed;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom,0px));text-align:center;font-size:10.5px;color:var(--mut);pointer-events:none;padding:0 12px}
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pg div{padding:7px 10px;border-radius:12px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.8)}
+.pg small{display:block;font-size:9.5px;color:var(--mut)}
+.ob{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.ob figure{margin:0;text-align:center}
+.ob svg{width:54px;height:54px}
+.ob figcaption{font-size:11px;font-weight:600}
+.ob ellipse,.ob circle{fill:hsla(var(--h),55%,62%,.5);stroke:hsl(var(--h),40%,40%);stroke-width:.8}
+.cm{width:100%;border-collapse:collapse;font-size:12px}
+.cm td{text-align:center;padding:5px 4px;font-weight:600}
+.cm th{font-weight:500;color:var(--mut);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 4px}
+.cm tr:nth-child(even){background:rgba(255,255,255,.45)}
+.cm tr:first-child th{font-family:"Fraunces",Georgia,serif;font-size:30px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:600}
+.cm small{display:block;font:500 11px "Inter",sans-serif;color:var(--mut)}
+#quiz{position:fixed;inset:0;z-index:9;display:none;align-items:center;justify-content:center;background:rgba(93,107,107,.3);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:16px}
+#quiz.on{display:flex}
+.qc{position:relative;width:min(420px,100%);box-sizing:border-box;padding:24px 20px 20px;border-radius:24px;background:rgba(241,247,247,.94);border:1px solid var(--edge);box-shadow:0 24px 60px rgba(93,107,107,.4);text-align:center;animation:rise .35s cubic-bezier(.2,.8,.2,1)}
+.qc h2{margin:0;font-family:"Fraunces",Georgia,serif;font-style:italic;font-weight:500;font-size:28px}
+.qx{position:absolute;top:12px;right:12px;width:28px;height:28px;border:1px solid var(--edge);border-radius:50%;background:rgba(255,255,255,.7);color:var(--mut);cursor:pointer}
+.qh{display:flex;justify-content:space-between;font-size:11px;color:var(--mut);padding-right:34px}
+.qq{font-size:16px;margin:16px 0}
+.qs{font-family:"Fraunces",Georgia,serif;font-size:46px;display:block;line-height:1.1}
+.qo{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qo button,.qn{font:inherit;font-weight:500;padding:12px 8px;border-radius:14px;border:1px solid var(--edge);background:var(--glass);color:var(--ink);cursor:pointer;box-shadow:0 4px 12px rgba(93,107,107,.14);transition:background .2s,transform .15s}
+.qo button:hover:not(:disabled){background:#fff}
+.qo button:active{transform:scale(.97)}
+.qo button.ok{background:#bfe3c8;border-color:#8fd6a6}
+.qo button.no{background:var(--c1)}
+.qf{margin:14px 0 10px;font-size:13px}
+.qn{padding:10px 26px;border:0;background:linear-gradient(150deg,#7a8c8c,var(--c6));color:var(--c3)}
+/* ===== dock cair (liquid glass) ===== */
+#hint{display:none}
+#row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px;width:100%;padding-top:20px}
+.lg,#bar .tog,#legend{background:linear-gradient(135deg,rgba(255,255,255,.58),rgba(241,247,247,.22));backdrop-filter:blur(18px) saturate(1.7);-webkit-backdrop-filter:blur(18px) saturate(1.7);border:1px solid rgba(255,255,255,.72);box-shadow:0 12px 32px rgba(93,107,107,.2),inset 0 1px 1px rgba(255,255,255,.95),inset 0 -1px 2px rgba(93,107,107,.14),inset 0 0 20px rgba(255,255,255,.3)}
+.lg{position:relative}
+.lg::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.65) 0%,rgba(255,255,255,0) 38%);opacity:.55}
+.dock svg,.tog svg,.bead svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.dockw{position:relative;margin-top:2px}
+.dock{display:flex;padding:0 8px;height:56px;border-radius:28px;z-index:1}
+.dock button{position:relative;z-index:1;width:56px;height:56px;border:0;background:none;color:var(--mut);cursor:pointer;display:flex;align-items:center;justify-content:center;font:inherit;padding:0}
+.dock button svg{width:22px;height:22px;transition:opacity .3s,transform .25s}
+.dock button:hover svg{transform:translateY(-2px);color:var(--ink)}
+.dock button span{position:absolute;bottom:6px;font-size:10px;font-weight:600;letter-spacing:.03em;color:var(--ink);opacity:0;transform:translateY(5px);transition:opacity .35s,transform .35s}
+.dock button.on svg{opacity:0}
+.dock button.on span{opacity:1;transform:none}
+.bead{position:absolute;z-index:3;top:-18px;left:calc(13px + var(--x,0)*56px);width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;pointer-events:none;
+  background:radial-gradient(circle at 32% 24%,rgba(255,255,255,.75),rgba(255,255,255,0) 42%),linear-gradient(150deg,var(--a,#6fb0b3),color-mix(in srgb,var(--a,#6fb0b3) 68%,#2e3939));
+  box-shadow:0 0 0 5px rgba(255,255,255,.5),0 10px 24px color-mix(in srgb,var(--a,#6fb0b3) 55%,transparent),inset 0 2px 3px rgba(255,255,255,.65),inset 0 -4px 8px rgba(0,0,0,.16);
+  transition:left .6s cubic-bezier(.34,1.56,.64,1)}
+.bead svg{width:22px;height:22px}
+.bead.sq{animation:sq .6s}
+@keyframes sq{0%{transform:scale(1)}30%{transform:scale(1.28,.8)}60%{transform:scale(.88,1.14)}100%{transform:scale(1)}}
+.glow{position:absolute;z-index:0;left:calc(var(--x,0)*56px - 6px);top:24px;width:68px;height:56px;border-radius:50%;background:radial-gradient(closest-side,var(--a,#6fb0b3),transparent);filter:blur(10px);opacity:.6;transition:left .6s cubic-bezier(.34,1.56,.64,1)}
+#bar .tog{width:62px;height:56px;padding:0;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9.5px;font-weight:600;letter-spacing:.02em;color:var(--mut)}
+#bar .tog svg{width:21px;height:21px}
+#bar .tog.on{color:var(--c3)}
+#bar input{height:44px;padding:0 16px 0 40px;background-color:transparent;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235D6B6B' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E"),linear-gradient(135deg,rgba(255,255,255,.58),rgba(241,247,247,.22));background-repeat:no-repeat;background-position:14px center,0 0;background-size:15px,auto;border:1px solid rgba(255,255,255,.72);box-shadow:0 12px 32px rgba(93,107,107,.2),inset 0 1px 1px rgba(255,255,255,.95),inset 0 0 20px rgba(255,255,255,.3)}
+/* ===== kotak legenda ===== */
+#legend{left:12px;right:auto;bottom:calc(12px + env(safe-area-inset-bottom,0px));width:330px;display:block;flex-wrap:nowrap;gap:0;padding:10px 12px 12px;border-radius:24px;pointer-events:auto}
+#legend .lh{width:100%;display:flex;justify-content:space-between;align-items:center;font:inherit;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);background:none;border:0;box-shadow:none;padding:2px 4px 8px;border-radius:0}
+#legend .lh svg{transition:transform .3s}
+#legend.off .lh{padding-bottom:2px}
+#legend.off .lh svg{transform:rotate(180deg)}
+#legend .lgg{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+#legend .lgg button{width:100%;justify-content:flex-start;padding:6px 9px;box-shadow:none;background:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.6);font-size:10px;line-height:1.15;text-align:left}
+#legend .lgg button.on{background:linear-gradient(150deg,#7a8c8c,var(--c6));color:var(--c3)}
+#legend .lt{margin:9px 4px 0;font-size:10px;line-height:1.45;color:var(--mut)}
+#legend.off .lgg,#legend.off .lt{display:none}
+@media(max-width:560px){#brand p{display:none}#row{gap:10px}#bar input{width:min(300px,86vw)}#legend{width:calc(100vw - 24px)}}
+#credit{position:fixed;z-index:4;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:9px 16px;border-radius:999px;font-size:11px;color:var(--mut);white-space:nowrap}
+#credit b{font-family:"Fraunces",Georgia,serif;font-style:italic;font-weight:600;font-size:13px;color:var(--ink)}
+#legend.off{width:auto}
 </style>
 </head>
 <body>
-<div id="bar"></div>
+<div id="bar"><div id="brand"><h1>Tabel Periodik</h1><p>118 unsur · model atom 3D</p></div></div>
 <div id="stage"><div id="scene"></div></div>
 <div id="info"></div>
+<div id="credit" class="lg">Dibuat oleh <b>Shifaul K.S</b> · © 2026</div>
+<div id="quiz"></div>
 <div id="hint">seret = putar · 2 jari / klik kanan / Shift+seret / tombol geser = geser kamera · scroll / cubit = zoom · klik kotak = detail + model atom</div>
 <script>
 const D="H,Hidrogen,1.008|He,Helium,4.0026|Li,Litium,6.94|Be,Berilium,9.0122|B,Boron,10.81|C,Karbon,12.011|N,Nitrogen,14.007|O,Oksigen,15.999|F,Fluorin,18.998|Ne,Neon,20.180|Na,Natrium,22.990|Mg,Magnesium,24.305|Al,Aluminium,26.982|Si,Silikon,28.085|P,Fosfor,30.974|S,Belerang,32.06|Cl,Klorin,35.45|Ar,Argon,39.948|K,Kalium,39.098|Ca,Kalsium,40.078|Sc,Skandium,44.956|Ti,Titanium,47.867|V,Vanadium,50.942|Cr,Kromium,51.996|Mn,Mangan,54.938|Fe,Besi,55.845|Co,Kobalt,58.933|Ni,Nikel,58.693|Cu,Tembaga,63.546|Zn,Seng,65.38|Ga,Galium,69.723|Ge,Germanium,72.630|As,Arsen,74.922|Se,Selenium,78.971|Br,Bromin,79.904|Kr,Kripton,83.798|Rb,Rubidium,85.468|Sr,Stronsium,87.62|Y,Itrium,88.906|Zr,Zirkonium,91.224|Nb,Niobium,92.906|Mo,Molibdenum,95.95|Tc,Teknesium,98|Ru,Rutenium,101.07|Rh,Rodium,102.91|Pd,Paladium,106.42|Ag,Perak,107.87|Cd,Kadmium,112.41|In,Indium,114.82|Sn,Timah,118.71|Sb,Antimon,121.76|Te,Telurium,127.60|I,Iodin,126.90|Xe,Xenon,131.29|Cs,Sesium,132.91|Ba,Barium,137.33|La,Lantanum,138.91|Ce,Serium,140.12|Pr,Praseodimium,140.91|Nd,Neodimium,144.24|Pm,Prometium,145|Sm,Samarium,150.36|Eu,Europium,151.96|Gd,Gadolinium,157.25|Tb,Terbium,158.93|Dy,Disprosium,162.50|Ho,Holmium,164.93|Er,Erbium,167.26|Tm,Tulium,168.93|Yb,Iterbium,173.05|Lu,Lutesium,174.97|Hf,Hafnium,178.49|Ta,Tantalum,180.95|W,Tungsten,183.84|Re,Renium,186.21|Os,Osmium,190.23|Ir,Iridium,192.22|Pt,Platina,195.08|Au,Emas,196.97|Hg,Raksa,200.59|Tl,Talium,204.38|Pb,Timbal,207.2|Bi,Bismut,208.98|Po,Polonium,209|At,Astatin,210|Rn,Radon,222|Fr,Fransium,223|Ra,Radium,226|Ac,Aktinium,227|Th,Torium,232.04|Pa,Protaktinium,231.04|U,Uranium,238.03|Np,Neptunium,237|Pu,Plutonium,244|Am,Amerisium,243|Cm,Kurium,247|Bk,Berkelium,247|Cf,Kalifornium,251|Es,Einsteinium,252|Fm,Fermium,257|Md,Mendelevium,258|No,Nobelium,259|Lr,Lawrensium,266|Rf,Rutherfordium,267|Db,Dubnium,268|Sg,Seaborgium,269|Bh,Bohrium,270|Hs,Hasium,277|Mt,Meitnerium,278|Ds,Darmstadtium,281|Rg,Roentgenium,282|Cn,Kopernisium,285|Nh,Nihonium,286|Fl,Flerovium,289|Mc,Moskovium,290|Lv,Livermorium,293|Ts,Tenesin,294|Og,Oganeson,294";
@@ -78,7 +180,7 @@ function atomSVG(z){const s=shells(z),S=s.length;let o='<svg viewBox="0 0 200 20
     for(let j=0;j<c;j++){const a=2*Math.PI*j/c+i;o+=`<circle class="elc" cx="${(100+r*Math.cos(a)).toFixed(1)}" cy="${(100+r*Math.sin(a)).toFixed(1)}" r="${c>20?2.2:3}"/>`}o+='</g>'});
   return o+'</svg>'}
 // konfigurasi subkulit (notasi inti gas mulia) + pengecualian
-const info=document.getElementById('info');let sel=null;
+const info=document.getElementById('info');let sel=null,cmp=false,cmpList=[];
 const SUP="⁰¹²³⁴⁵⁶⁷⁸⁹",sup=n=>String(n).split("").map(d=>SUP[d]).join("");
 const CORE=[[86,"[Rn]"],[54,"[Xe]"],[36,"[Kr]"],[18,"[Ar]"],[10,"[Ne]"],[2,"[He]"]];
 const CFX={24:"[Ar] 3d⁵ 4s¹",29:"[Ar] 3d¹⁰ 4s¹",41:"[Kr] 4d⁴ 5s¹",42:"[Kr] 4d⁵ 5s¹",44:"[Kr] 4d⁷ 5s¹",45:"[Kr] 4d⁸ 5s¹",46:"[Kr] 4d¹⁰",47:"[Kr] 4d¹⁰ 5s¹",57:"[Xe] 5d¹ 6s²",58:"[Xe] 4f¹ 5d¹ 6s²",64:"[Xe] 4f⁷ 5d¹ 6s²",78:"[Xe] 4f¹⁴ 5d⁹ 6s¹",79:"[Xe] 4f¹⁴ 5d¹⁰ 6s¹",89:"[Rn] 6d¹ 7s²",90:"[Rn] 6d² 7s²",91:"[Rn] 5f² 6d¹ 7s²",92:"[Rn] 5f³ 6d¹ 7s²",93:"[Rn] 5f⁴ 6d¹ 7s²",96:"[Rn] 5f⁷ 6d¹ 7s²",103:"[Rn] 5f¹⁴ 7s² 7p¹"};
@@ -95,11 +197,11 @@ const P4={a:[["P",-.7,-.7],["P",.7,-.7],["P",.7,.7],["P",-.7,.7]],b:[[0,1,1],[1,
 const S8={a:[...Array(8)].map((_,i)=>["S",Math.cos(i*Math.PI/4),Math.sin(i*Math.PI/4)]),b:[...Array(8)].map((_,i)=>[i,(i+1)%8,1]),r:9};
 const MOLS={H:["H₂",di("H","H",1)],C:["CH₄",cross("C","H")],N:["N₂",di("N","N",3)],O:["O₂",di("O","O",2)],F:["F₂",di("F","F",1)],P:["P₄",P4],S:["S₈",S8],Cl:["Cl₂",di("Cl","Cl",1)],Br:["Br₂",di("Br","Br",1)],I:["I₂",di("I","I",1)],B:["BF₃",tri("B","F")],Si:["SiH₄",cross("Si","H")],Ge:["GeH₄",cross("Ge","H")],As:["AsH₃",tri("As","H")],Se:["H₂Se",bent("Se","H")],Sb:["SbH₃",tri("Sb","H")],Te:["H₂Te",bent("Te","H")]};
 const MF={Al:"Al₂O₃",Fe:"Fe₂O₃",Cu:"CuO",Zn:"ZnO",Ag:"AgCl",Ti:"TiO₂",Sn:"SnO₂",Pb:"PbO",Hg:"HgS",Ni:"NiO",Mn:"MnO₂",Cr:"Cr₂O₃",Co:"CoO",U:"UO₂",W:"WO₃",Au:"AuCl₃",Pt:"PtCl₂"};
-const MCOL={H:"#e8eadf",C:"#8b8f7e",N:"#5b8def",O:"#e5534b",F:"#7fd17f",Cl:"#4fc16f",S:"#e5c84b",P:"#e08a3c",B:"#d9a07a",Br:"#a0522d",I:"#8a4fbf"};
+const MCOL={H:"#ffffff",C:"#9aa8a8",N:"#8fb3e8",O:"#f19a98",F:"#a9dfa9",Cl:"#8fd6a6",S:"#f0dc8a",P:"#f1b27a",B:"#e3b99c",Br:"#c98b6a",I:"#b79be0"};
 function mkMol(m){const S=40;let o='<svg viewBox="0 0 200 110">';
   m.b.forEach(([i,j,od])=>{const A=m.a[i],B=m.a[j],ax=100+A[1]*S,ay=55+A[2]*S,dx=100+B[1]*S-ax,dy=55+B[2]*S-ay,L=Math.hypot(dx,dy),nx=-dy/L,ny=dx/L;
     (od==3?[-4,0,4]:od==2?[-2.5,2.5]:[0]).forEach(f=>{o+=`<line class="bond${od?'':' d'}" x1="${(ax+nx*f).toFixed(1)}" y1="${(ay+ny*f).toFixed(1)}" x2="${(ax+dx+nx*f).toFixed(1)}" y2="${(ay+dy+ny*f).toFixed(1)}"/>`})});
-  m.a.forEach(([s,x,y])=>{const cx=(100+x*S).toFixed(1),cy=(55+y*S).toFixed(1);o+=`<circle cx="${cx}" cy="${cy}" r="${m.r||(s=='H'?9:15)}" style="fill:${MCOL[s]||'hsl(var(--h),70%,58%)'}"/><text class="al" x="${cx}" y="${cy}">${s}</text>`});
+  m.a.forEach(([s,x,y])=>{const cx=(100+x*S).toFixed(1),cy=(55+y*S).toFixed(1);o+=`<circle cx="${cx}" cy="${cy}" r="${m.r||(s=='H'?9:15)}" style="fill:${MCOL[s]||'hsl(var(--h),55%,72%)'};stroke:rgba(93,107,107,.4);stroke-width:1"/><text class="al" x="${cx}" y="${cy}">${s}</text>`});
   return o+'</svg>'}
 function molHTML(n){const I=INFO[n],sy=I.sy,lb=I.c[0];let f,m,note="";
   if(MOLS[sy])[f,m]=MOLS[sy];
@@ -111,13 +213,13 @@ function molHTML(n){const I=INFO[n],sy=I.sy,lb=I.c[0];let f,m,note="";
   return(m?`<div class="mol">${mkMol(m)}</div><p><b>${f}</b></p>`:"")+(note?`<p class="note">${note}</p>`:"")}
 function openEl(t){closeEl();const n=+t.dataset.n,I=INFO[n],s=shells(n),S=s.length,P=n<=2?1:n<=10?2:n<=18?3:n<=36?4:n<=54?5:n<=86?6:7;
   info.style.setProperty('--h',I.c[1]);
-  info.innerHTML=`<button onclick="closeEl()" aria-label="Tutup">✕</button><h2>${I.sy}<span>${I.nm} · No. ${n}</span></h2><h3>Model atom (Bohr)</h3><div class="atom">${atomSVG(n)}</div><h3>Konfigurasi elektron</h3><p>Per kulit: <b>${s.join(" · ")}</b><br>Subkulit: <b>${config(n)}</b><br>${S} kulit terisi · periode ${P} · kulit terluar berisi ${s[S-1]} elektron<br>Massa atom ${I.ms} · ${I.c[0]}</p><p class="note">Model Bohr hanya gambaran sederhana; bentuk atom sebenarnya berupa awan orbital.</p><h3>Molekul</h3>${molHTML(n)}`;
+  info.innerHTML=`<button onclick="closeEl()" aria-label="Tutup">✕</button><h2>${I.sy}<span>${I.nm} · No. ${n}</span></h2><h3>Model atom (Bohr)</h3><div class="atom">${atomSVG(n)}</div><h3>Konfigurasi elektron</h3><p>Per kulit: <b>${s.join(" · ")}</b><br>Subkulit: <b>${config(n)}</b><br>${S} kulit terisi · periode ${P} · kulit terluar berisi ${s[S-1]} elektron<br>Massa atom ${I.ms} · ${I.c[0]}</p><p class="note">Model Bohr hanya gambaran sederhana; bentuk atom sebenarnya berupa awan orbital.</p><h3>Bentuk orbital valensi</h3><div class="ob">${orbs(n)}</div><h3>Sifat</h3>${propHTML(n)}<h3>Molekul</h3>${molHTML(n)}`;
   sel=t;t.classList.add('x');info.classList.add('on');placeInfo()}
-function closeEl(){if(sel){sel.classList.remove('x');sel=null}info.classList.remove('on')}
+function closeEl(){if(sel){sel.classList.remove('x');sel=null}cmpList.forEach(t=>t.classList.remove('x'));cmpList=[];info.classList.remove('on')}
 function placeInfo(){if(!sel)return;const r=sel.getBoundingClientRect(),w=info.offsetWidth,h=info.offsetHeight,W=innerWidth,H=innerHeight,s=info.style;
   if(W<560){s.left='8px';s.right='8px';s.top='auto';s.bottom='8px';s.width='auto';s.maxHeight='55vh';return}
   s.right='auto';s.bottom='auto';s.width='300px';s.maxHeight='';let x=r.right+14;if(x+w>W-8)x=r.left-w-14;x=Math.max(8,Math.min(W-w-8,x));
-  s.left=x+'px';s.top=Math.max(56,Math.min(H-h-8,r.top+r.height/2-h/2))+'px'}
+  s.left=x+'px';s.top=Math.max(150,Math.min(H-h-8,r.top+r.height/2-h/2))+'px'}
 // kolom (grup) & baris untuk layout tabel standar
 function pos(n){
   if(n==1)return[1,0]; if(n==2)return[18,0]; if(n<=4)return[n-2,1]; if(n<=10)return[n+8,1];
@@ -127,8 +229,8 @@ function pos(n){
 }
 const NM=new Set("H C N O P S Se".split(" ")),MT=new Set("B Si Ge As Sb Te".split(" ")),PT=new Set("Al Ga In Sn Tl Pb Bi Po Nh Fl Mc Lv".split(" "));
 // kategori -> [label, hue]
-const CAT={alk:["Logam alkali",5],ale:["Logam alkali tanah",28],trn:["Logam transisi",150],pst:["Logam pasca-transisi",175],
-  mtl:["Metaloid",100],non:["Non-logam",55],hal:["Halogen",40],nob:["Gas mulia",335],lan:["Lantanida",200],act:["Aktinida",262]};
+const CAT={alk:["Logam alkali",350],ale:["Logam alkali tanah",30],trn:["Logam transisi",185],pst:["Logam pasca-transisi",215],
+  mtl:["Metaloid",100],non:["Non-logam",52],hal:["Halogen",330],nob:["Gas mulia",265],lan:["Lantanida",150],act:["Aktinida",300]};
 function cat(n,g,s){
   if(n>=57&&n<=71)return"lan"; if(n>=89&&n<=103)return"act";
   if(g==18)return"nob"; if(g==17)return"hal"; if(NM.has(s))return"non"; if(MT.has(s))return"mtl";
@@ -155,10 +257,16 @@ function setMode(m){
   mode=m;
   els.forEach((o,i)=>{o.e.style.transitionDelay=(i*6)+"ms,0ms,0ms,0ms,0ms,0ms";o.e.style.transform=L[m](o,i)});
   trx=0;try_=Math.round(ry/360)*360;tk=fit(m);tpx=0;tpy=0;
-  document.querySelectorAll("#bar button[data-m]").forEach(b=>b.classList.toggle("on",b.dataset.m==m));
+  document.querySelectorAll("#bar button[data-m]").forEach(b=>b.classList.toggle("on",b.dataset.m==m));moveBead(m);
 }
-const bar=document.getElementById("bar");
-["table","sphere","helix","grid"].forEach(m=>{const b=document.createElement("button");b.textContent=m;b.dataset.m=m;b.onclick=()=>setMode(m);bar.appendChild(b)});
+const bar=document.createElement("div");bar.id="row";document.getElementById("bar").appendChild(bar);
+const sq=(...p)=>p.map(([x,y])=>`<rect x="${x}" y="${y}" width="4.6" height="4.6" rx="1.1"/>`).join("");
+const IC={table:sq([3,3],[9.7,3],[16.4,3],[3,9.7],[9.7,9.7],[16.4,9.7],[3,16.4],[9.7,16.4],[16.4,16.4]),sphere:'<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',
+  helix:'<ellipse cx="12" cy="6" rx="7" ry="2.5"/><ellipse cx="12" cy="12" rx="7" ry="2.5"/><ellipse cx="12" cy="18" rx="7" ry="2.5"/>',grid:'<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12L4 7.5M12 12v9"/>'};
+const dockw=document.createElement("div");dockw.className="dockw";dockw.innerHTML='<i class="glow"></i><div class="dock lg"></div><i class="bead"></i>';bar.appendChild(dockw);
+const seg=dockw.querySelector(".dock"),bead=dockw.querySelector(".bead"),MODES=["table","sphere","helix","grid"],ACC={table:"#6fb0b3",sphere:"#ec9c9a",helix:"#5D6B6B",grid:"#8fa7a7"};
+function moveBead(m){dockw.style.setProperty("--x",MODES.indexOf(m));dockw.style.setProperty("--a",ACC[m]);bead.innerHTML=`<svg viewBox="0 0 24 24">${IC[m]}</svg>`;bead.classList.remove("sq");void bead.offsetWidth;bead.classList.add("sq")}
+MODES.forEach(m=>{const b=document.createElement("button");b.dataset.m=m;b.innerHTML=`<svg viewBox="0 0 24 24">${IC[m]}</svg><span>${m}</span>`;b.onclick=()=>{sfx("mode");setMode(m)};seg.appendChild(b)});
 function frame(){
   if(!drag&&(mode=="sphere"||mode=="helix")&&!scene.querySelector(".x"))try_+=.15;
   rx+=(trx-rx)*.1;ry+=(try_-ry)*.1;k+=(tk-k)*.1;
@@ -180,7 +288,7 @@ addEventListener("pointermove",e=>{
 });
 function up(e){
   if(ptr.size==1&&moved<6&&startT){const was=startT.classList.contains("x");
-    closeEl();if(!was)openEl(startT)}
+    if(cmp){sfx("tap");pick(startT)}else{sfx(was?"close":"open");closeEl();if(!was)openEl(startT)}}
   ptr.delete(e.pointerId);if(!ptr.size)drag=false;
 }
 addEventListener("pointerup",up);addEventListener("pointercancel",up);
@@ -195,20 +303,69 @@ function applyFilter(){const t=q.toLowerCase(),m=[];
   return m}
 // putar bola/helix supaya unsur yang dicari menghadap ke depan
 function faceTo(i){if(mode!="sphere"&&mode!="helix")return;const th=mode=="sphere"?Math.sqrt(N*Math.PI)*Math.acos(-1+2*i/N):i*.175+Math.PI,a=-th*180/Math.PI;try_=a+Math.round((ry-a)/360)*360;trx=0}
-function show(n){const e=els[n-1].e;if(sel===e)return;faceTo(n-1);openEl(e)}
-const lg=document.createElement("div");lg.id="legend";document.body.appendChild(lg);
+function show(n){const e=els[n-1].e;if(cmp)setCmp(false);if(sel===e)return;sfx("open");faceTo(n-1);openEl(e)}
+const lw=document.createElement("div");lw.id="legend";lw.className="lg"+(innerWidth<560?" off":"");
+lw.innerHTML='<button class="lh"><span>Kategori unsur</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="lgg"></div><p class="lt">seret = putar · 2 jari / klik kanan / Shift+seret = geser · scroll / cubit = zoom · klik kotak = detail</p>';
+document.body.appendChild(lw);const lg=lw.querySelector(".lgg");lw.querySelector(".lh").onclick=()=>{sfx("chip");lw.classList.toggle("off")};
 Object.values(CAT).forEach(([lb,h])=>{const b=document.createElement("button"),c=INFO.filter(x=>x&&x.c[0]==lb).length;
-  b.innerHTML=`<i style="background:hsl(${h},70%,55%)"></i>${lb} (${c})`;
-  b.onclick=()=>{fCat=fCat==lb?null:lb;lg.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b&&!!fCat));applyFilter()};lg.appendChild(b)});
+  b.innerHTML=`<i style="background:hsl(${h},60%,68%)"></i>${lb} (${c})`;
+  b.onclick=()=>{sfx("chip");fCat=fCat==lb?null:lb;lg.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b&&!!fCat));applyFilter()};lg.appendChild(b)});
 const inp=document.createElement("input");inp.type="search";inp.placeholder="Cari nama / simbol / nomor";inp.autocomplete="off";bar.appendChild(inp);
-inp.oninput=()=>{q=inp.value.trim();const m=applyFilter();if(q&&m.length==1)show(m[0])};
+inp.oninput=()=>{sfx("type");q=inp.value.trim();const m=applyFilter();if(q&&m.length==1)show(m[0])};
 inp.onkeydown=e=>{if(e.key=="Enter"){const m=applyFilter();if(m.length)show(m[0]);inp.blur()}else if(e.key=="Escape"){inp.value="";q="";applyFilter();closeEl()}};
 // zoom ke arah titik kursor / jari, supaya bagian yang dilihat tidak lari
 function zoomAt(cx,cy,f){const k2=Math.max(.1,Math.min(4,tk*f)),r=k2/tk,ox=cx-innerWidth/2,oy=cy-innerHeight/2;tpx=ox-(ox-tpx)*r;tpy=oy-(oy-tpy)*r;tk=k2}
 stage.addEventListener("contextmenu",e=>e.preventDefault());
-const pb=document.createElement("button");pb.textContent="geser";pb.title="Seret = geser kamera";pb.onclick=()=>{panMode=!panMode;pb.classList.toggle("on",panMode)};bar.insertBefore(pb,bar.children[4]);
+const pb=document.createElement("button");pb.className="tog";pb.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"/></svg><span>geser</span>';pb.title="Seret = geser kamera";pb.onclick=()=>{panMode=!panMode;pb.classList.toggle("on",panMode);sfx(panMode?"on":"off")};bar.insertBefore(pb,inp);
 addEventListener("keydown",e=>{if(e.target.tagName=="INPUT")return;const s=70,m={ArrowLeft:[s,0],ArrowRight:[-s,0],ArrowUp:[0,s],ArrowDown:[0,-s],a:[s,0],d:[-s,0],w:[0,s],s:[0,-s]}[e.key];
   if(m){tpx+=m[0];tpy+=m[1];e.preventDefault()}else if(e.key=="+"||e.key=="=")zoomAt(innerWidth/2,innerHeight/2,1.15);else if(e.key=="-")zoomAt(innerWidth/2,innerHeight/2,1/1.15)});
+// ===== sifat unsur: titik leleh, titik didih (°C), elektronegativitas (Pauling); kosong = belum diketahui =====
+const PR="-259,-253,2.2|,-269,|181,1342,.98|1287,2470,1.57|2075,4000,2.04|3550,4027,2.55|-210,-196,3.04|-218,-183,3.44|-220,-188,3.98|-249,-246,|98,883,.93|650,1090,1.31|660,2519,1.61|1414,3265,1.9|44,277,2.19|115,445,2.58|-102,-34,3.16|-189,-186,|64,759,.82|842,1484,1|1541,2836,1.36|1668,3287,1.54|1910,3407,1.63|1907,2671,1.66|1246,2061,1.55|1538,2861,1.83|1495,2927,1.88|1455,2913,1.91|1085,2562,1.9|420,907,1.65|30,2204,1.81|938,2833,2.01|817,614,2.18|221,685,2.55|-7,59,2.96|-157,-153,3|39,688,.82|777,1382,.95|1526,3345,1.22|1855,4409,1.33|2477,4744,1.6|2623,4639,2.16|2157,4265,1.9|2334,4150,2.2|1964,3695,2.28|1555,2963,2.2|962,2162,1.93|321,767,1.69|157,2072,1.78|232,2602,1.96|631,1587,2.05|450,988,2.1|114,184,2.66|-112,-108,2.6|28,671,.79|727,1897,.89|920,3464,1.1|795,3443,1.12|935,3520,1.13|1024,3074,1.14|1042,3000,|1072,1794,1.17|826,1529,|1312,3273,1.2|1356,3230,|1407,2567,1.22|1461,2720,1.23|1529,2868,1.24|1545,1950,1.25|824,1196,|1652,3402,1.27|2233,4603,1.3|3017,5458,1.5|3422,5555,2.36|3186,5596,1.9|3033,5012,2.2|2446,4428,2.2|1768,3825,2.28|1064,2856,2.54|-39,357,2|304,1473,1.62|327,1749,2.33|271,1564,2.02|254,962,2|302,,2.2|-71,-62,|,,.7|700,1737,.9|1050,3200,1.1|1750,4788,1.3|1572,,1.5|1135,4131,1.38|644,,1.36|640,3228,1.28|1176,2011,1.13|1345,3110,1.28|986,,1.3|900,,1.3|860,,1.3|1527,,1.3|827,,1.3|827,,1.3|1627,,".split("|").map(s=>s.split(","));
+function props(n){const[mp,bp,en]=PR[n-1]||[],lf=(n>=57&&n<=71)||(n>=89&&n<=103),g=pos(n)[0],P=n<=2?1:n<=10?2:n<=18?3:n<=36?4:n<=54?5:n<=86?6:7,f=(v,u)=>v?v+u:"—";
+  return{g:lf?"—":g,p:P,b:lf?"f":(n==2||g<=2)?"s":g>=13?"p":"d",st:bp&&+bp<25?"Gas":mp&&+mp<=25?"Cair":mp?"Padat":"Tidak diketahui",mp:f(mp," °C"),bp:f(bp," °C"),en:f(en,"")}}
+function propHTML(n){const P=props(n);return'<div class="pg">'+[["Golongan",P.g],["Periode",P.p],["Blok",P.b],["Wujud (25 °C)",P.st],["Titik leleh",P.mp],["Titik didih",P.bp],["Elektronegativitas",P.en]].map(([l,v])=>`<div><small>${l}</small><b>${v}</b></div>`).join("")+'</div><p class="note">Nilai pendekatan pada 1 atm; — = belum diketahui. Karbon dan arsen menyublim.</p>'}
+// ===== bentuk orbital s / p / d / f (gambaran sederhana) =====
+const ORB={s:'<circle r="15"/>',p:[0,60,120].map(a=>`<g transform="rotate(${a})"><ellipse cx="-11" rx="10" ry="5"/><ellipse cx="11" rx="10" ry="5"/></g>`).join(""),
+  d:'<g transform="rotate(45)"><ellipse cx="-11" rx="10" ry="5"/><ellipse cx="11" rx="10" ry="5"/><ellipse cy="-11" rx="5" ry="10"/><ellipse cy="11" rx="5" ry="10"/></g>',
+  f:[...Array(8)].map((_,a)=>`<ellipse cx="12" rx="9" ry="3.6" transform="rotate(${a*45})"/>`).join("")};
+function orbs(n){const t=config(n).replace(/\[[A-Za-z]+\]/,""),re=/(\d)([spdf])([⁰¹²³⁴⁵⁶⁷⁸⁹]+)?/g;let m,o="";
+  while(m=re.exec(t))o+=`<figure><svg viewBox="-30 -30 60 60">${ORB[m[2]]}</svg><figcaption>${m[1]}${m[2]}${m[3]||""}</figcaption></figure>`;return o}
+// ===== bandingkan dua unsur =====
+function cmpRows(n){const I=INFO[n],P=props(n);return{"Nomor atom":n,"Massa atom":I.ms,Kategori:I.c[0],Golongan:P.g,Periode:P.p,Blok:P.b,"Wujud":P.st,"Titik leleh":P.mp,"Titik didih":P.bp,"Elektroneg.":P.en,"Elektron/kulit":shells(n).join(" · ")}}
+function pick(t){const i=cmpList.indexOf(t);if(i>=0){t.classList.remove("x");cmpList.splice(i,1)}else{if(cmpList.length>=2)cmpList.shift().classList.remove("x");cmpList.push(t);t.classList.add("x")}showCmp()}
+function showCmp(){const s=info.style,w=Math.min(460,innerWidth-16),X='<button onclick="setCmp(false)" aria-label="Tutup">✕</button>';let h;
+  if(cmpList.length<2)h=`${X}<h2>Bandingkan</h2><p class="note">Ketuk ${cmpList.length?"satu unsur lagi":"dua unsur"} di tabel untuk membandingkan.</p>`;
+  else{const[a,b]=cmpList.map(t=>+t.dataset.n),A=cmpRows(a),B=cmpRows(b);s.setProperty('--h',INFO[a].c[1]);
+    h=`${X}<table class="cm"><tr><th>${INFO[a].sy}<small>${INFO[a].nm}</small></th><th></th><th>${INFO[b].sy}<small>${INFO[b].nm}</small></th></tr>${Object.keys(A).map(r=>`<tr><td>${A[r]}</td><th>${r}</th><td>${B[r]}</td></tr>`).join("")}</table>`}
+  info.innerHTML=h;s.width=w+'px';s.left=(innerWidth-w)/2+'px';s.right='auto';s.top='auto';s.bottom='10px';s.maxHeight='62vh';info.classList.add('on')}
+function setCmp(v){cmp=v;pb2.classList.toggle("on",v);closeEl();if(v)showCmp()}
+// ===== kuis tebak unsur =====
+const quiz=document.getElementById("quiz");let Q=null;
+const shuf=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+function qz(h){quiz.innerHTML=`<div class="qc"><button class="qx" onclick="quizClose()" aria-label="Tutup">✕</button>${h}</div>`;quiz.classList.add("on")}
+function quizClose(){quiz.classList.remove("on")}
+function quizMenu(){qz(`<h2>Kuis Unsur</h2><p class="qq">Tebak nama unsur dari simbolnya, atau sebaliknya (contoh: Au = Emas). 10 soal.</p><div class="qo"><button onclick="quizStart(36)">Mudah · unsur 1–36</button><button onclick="quizStart(118)">Semua 118 unsur</button></div>`)}
+function quizStart(max){Q={max,i:0,score:0,streak:0};quizNext()}
+function quizNext(){if(Q.i>=10)return quizEnd();Q.i++;const n=1+Math.floor(Math.random()*Q.max),I=INFO[n],rev=Math.random()<.5,pool=INFO.map((x,j)=>j).filter(j=>j&&j!=n&&j<=Q.max),same=pool.filter(j=>INFO[j].c[0]==I.c[0]),
+    opts=shuf([n,...shuf(same.length>=3?same:pool).slice(0,3)]);Q.ans=n;
+  qz(`<div class="qh"><span>Soal ${Q.i}/10</span><span>Skor ${Q.score} · beruntun ${Q.streak}</span></div><p class="qq">${rev?`Apa simbol unsur <b>${I.nm}</b>?`:`Simbol ini unsur apa?<b class="qs">${I.sy}</b>`}</p><div class="qo">${opts.map(j=>`<button data-j="${j}" onclick="quizPick(${j})">${rev?INFO[j].sy:INFO[j].nm}</button>`).join("")}</div>`)}
+function quizPick(j){const ok=j==Q.ans,I=INFO[Q.ans];sfx(ok?"ok":"no");Q.score+=ok;Q.streak=ok?Q.streak+1:0;
+  quiz.querySelectorAll(".qo button").forEach(b=>{b.disabled=true;const v=+b.dataset.j;if(v==Q.ans)b.classList.add("ok");else if(v==j)b.classList.add("no")});
+  quiz.querySelector(".qc").insertAdjacentHTML("beforeend",`<p class="qf">${ok?"Benar!":"Belum tepat."} ${I.sy} = ${I.nm} (no. ${Q.ans})</p><button class="qn" onclick="quizNext()">${Q.i>=10?"Lihat hasil":"Lanjut"}</button>`)}
+function quizEnd(){sfx("done");qz(`<h2>Selesai!</h2><p class="qq">Skormu <b>${Q.score}/10</b></p><div class="qo"><button onclick="quizStart(Q.max)">Main lagi</button><button onclick="quizMenu()">Ganti level</button></div>`)}
+const mkTog=(t,f,ic)=>{const b=document.createElement("button");b.className="tog";b.innerHTML=`<svg viewBox="0 0 24 24">${ic}</svg><span>${t}</span>`;b.onclick=f;bar.insertBefore(b,inp);return b};
+const pb2=mkTog("bandingkan",()=>{setCmp(!cmp);sfx(cmp?"on":"off")},'<circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/>');mkTog("kuis",()=>{sfx("open");quizMenu()},'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7"/><circle cx="12" cy="17" r=".6"/>');
+// ===== efek suara (disintesis dengan Web Audio, tanpa file) =====
+let AC=null,snd=true;try{snd=localStorage.getItem("snd")!="0"}catch(e){}
+const SFX={tap:[[1318,0,.2,"sine",.07],[1976,0,.14,"sine",.03]],open:[[523,0,.22,"sine",.045,784],[784,.06,.28,"sine",.035,1175]],close:[[784,0,.16,"sine",.04,523]],
+  mode:[[280,0,.24,"sine",.09,700],[900,.08,.14,"sine",.03,520]],chip:[[660,0,.09,"triangle",.05],[880,.05,.09,"triangle",.04]],type:[[1500,0,.03,"square",.01]],
+  on:[[700,0,.08,"sine",.05],[1000,.07,.12,"sine",.05]],off:[[1000,0,.08,"sine",.05],[700,.07,.12,"sine",.05]],
+  ok:[[659,0,.14,"sine",.07],[880,.1,.14,"sine",.07],[1319,.2,.35,"sine",.07]],no:[[240,0,.3,"triangle",.07,150]],
+  done:[[523,0,.16,"sine",.06],[659,.12,.16,"sine",.06],[784,.24,.16,"sine",.06],[1047,.36,.5,"sine",.07]]};
+function sfx(k){if(!snd)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume();const t0=AC.currentTime;
+  SFX[k].forEach(([f,t,d,ty,v,f2])=>{const o=AC.createOscillator(),g=AC.createGain();o.type=ty;o.frequency.setValueAtTime(f,t0+t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t0+t+d);
+    g.gain.setValueAtTime(.0001,t0+t);g.gain.exponentialRampToValueAtTime(v,t0+t+.012);g.gain.exponentialRampToValueAtTime(.0001,t0+t+d);o.connect(g).connect(AC.destination);o.start(t0+t);o.stop(t0+t+d+.05)})}catch(e){}}
+const sb=mkTog("suara",()=>{snd=!snd;sb.classList.toggle("on",snd);try{localStorage.setItem("snd",snd?"1":"0")}catch(e){}sfx("on")},'<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a8 8 0 0 1 0 11"/>');sb.classList.toggle("on",snd);
 setMode("table");k=tk;requestAnimationFrame(frame);
 </script>
 </body>
